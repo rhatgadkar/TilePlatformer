@@ -37,6 +37,26 @@ GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g)
         fprintf(stderr, "%s %d %s \n", "Invalid height: '", h, "'");
         exit(0);
     }
+
+    for (int i = c; i < c+w; i++)
+    {
+        char curr = g->getMap(r, i);
+        if (curr != '0')
+        {
+            fprintf(stderr, "%s %c %s %c %s \n", "Cannot add GameObject: '", tile, "', This tile exists here: '", curr, "'");
+            exit(0);
+        }
+    }
+
+    for (int i = r; i < r+h; i++)
+    {
+        char curr = g->getMap(i, c);
+        if (curr != '0')
+        {
+            fprintf(stderr, "%s %c %s %c %s \n", "Cannot add GameObject: '", tile, "', This tile exists here: '", curr, "'");
+            exit(0);
+        }
+    }
 }
 
 bool GameObject::validCol(int c)
