@@ -423,9 +423,6 @@ int Game::parseMapFile() // returns value for m_levelWidth
             }
         }
 
-        //if (tile == 'w' || tile == 's')
-        //    m_map[row][col] = tile;
-
         // create the gameobject
         switch (tile)
         {
