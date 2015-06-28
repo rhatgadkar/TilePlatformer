@@ -8,7 +8,7 @@ class Game;
 class GameObject
 {
 public:
-    GameObject(int r, int c, char tile, int w, int h, Game* g);
+    GameObject(int r, int c, char tile, int w, int h, Game* g, int line);
     virtual ~GameObject() {}
     virtual void doSomething() = 0;
     Game* getGame() const { return m_game; }

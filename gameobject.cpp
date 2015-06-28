@@ -3,7 +3,7 @@
 #include "globals.h"
 #include <stdio.h>
 
-GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g)
+GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g, int line)
 {
     m_tile = tile;
     m_width = w;
@@ -14,27 +14,27 @@ GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g)
 
     if (tile != 'w' && tile != 'p' && tile != 's' && tile != 'm')
     {
-        fprintf(stderr, "%s %c %s \n", "Invalid tile char: '", tile, "'");
+        fprintf(stderr, "%s %c %s %d \n", "Invalid tile char: '", tile, "' at line: ", line);
         exit(0);
     }
     if (!validRow(r))
     {
-        fprintf(stderr, "%s %d %s \n", "Invalid row: '", r, "'");
+        fprintf(stderr, "%s %d %s %d \n", "Invalid row: '", r, "' at line: ", line);
         exit(0);
     }
     if (c < 0 || c >= g->getNumCols())
     {
-        fprintf(stderr, "%s %d %s \n", "Invalid col: '", c, "'");
+        fprintf(stderr, "%s %d %s %d \n", "Invalid col: '", c, "' at line: ", line);
         exit(0);
     }
     if (w < 1 || w > g->getNumCols())
     {
-        fprintf(stderr, "%s %d %s \n", "Invalid width: '", w, "'");
+        fprintf(stderr, "%s %d %s %d \n", "Invalid width: '", w, "' at line: ", line);
         exit(0);
     }
     if (h < 1 || h > NUM_ROWS)
     {
-        fprintf(stderr, "%s %d %s \n", "Invalid height: '", h, "'");
+        fprintf(stderr, "%s %d %s %d \n", "Invalid height: '", h, "' at line: ", line);
         exit(0);
     }
 
@@ -43,7 +43,8 @@ GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g)
         char curr = g->getMap(r, i);
         if (curr != '0')
         {
-            fprintf(stderr, "%s %c %s %c %s \n", "Cannot add GameObject: '", tile, "', This tile exists here: '", curr, "'");
+            fprintf(stderr,
+                    "%s %c %s %c %s %d \n", "Cannot add GameObject: '", tile, "', This tile exists here: '", curr, "' at line: ", line);
             exit(0);
         }
     }

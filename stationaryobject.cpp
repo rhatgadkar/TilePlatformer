@@ -2,11 +2,12 @@
 #include "game.h"
 #include <stdio.h>
 
-StationaryObject::StationaryObject(int r, int c, char tile, int w, int h, Game* g) : GameObject(r, c, tile, w, h, g)
+StationaryObject::StationaryObject(int r, int c, char tile, int w, int h, Game* g, int line)
+  : GameObject(r, c, tile, w, h, g, line)
 {
     if (tile != 'w' && tile != 's')
     {
-        fprintf(stderr, "%s %c %s \n", "Invalid StationaryObject tile char: '", tile, "'");
+        fprintf(stderr, "%s %c %s %d \n", "Invalid StationaryObject tile char: '", tile, "' at line: ", line);
         exit(0);
     }
 

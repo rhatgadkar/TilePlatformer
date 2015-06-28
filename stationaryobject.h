@@ -8,7 +8,7 @@ class Game;
 class StationaryObject : public GameObject
 {
 public:
-    StationaryObject(int r, int c, char tile, int w, int h, Game* g);
+    StationaryObject(int r, int c, char tile, int w, int h, Game* g, int line);
     virtual ~StationaryObject();
     virtual void doSomething() {}
 private:

@@ -8,7 +8,7 @@ class Game;
 class MovingObject : public GameObject
 {
 public:
-    MovingObject(int r, int c, char tile, int w, int h, Game* g);
+    MovingObject(int r, int c, char tile, int w, int h, Game* g, int line);
     virtual ~MovingObject() {}
     virtual void doSomething() {}
     void moveLeft() { m_x--; }

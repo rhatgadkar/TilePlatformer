@@ -427,13 +427,13 @@ int Game::parseMapFile() // returns value for m_levelWidth
         switch (tile)
         {
         case 'w':
-            addNewStationaryObject(new Wall(row, col, width, height, this));
+            addNewStationaryObject(new Wall(row, col, width, height, this, lineNum));
             break;
         case 'p':
-            m_player = new Player(row, col, width, height, this);
+            m_player = new Player(row, col, width, height, this, lineNum);
             break;
         case 's':
-            addNewStationaryObject(new StationaryEnemy(row, col, width, height, this));
+            addNewStationaryObject(new StationaryEnemy(row, col, width, height, this, lineNum));
             break;
         case 'm':
             break;
