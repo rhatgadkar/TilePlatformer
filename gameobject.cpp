@@ -38,24 +38,18 @@ GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g, int line)
         exit(0);
     }
 
-    for (int i = c; i < c+w; i++)
+    for (int rCount = r; rCount < r + h; rCount++)
     {
-        char curr = g->getMap(r, i);
-        if (curr != '0')
+        for (int cCount = c; cCount < c + w; cCount++)
         {
-            fprintf(stderr,
-                    "%s %c %s %c %s %d \n", "Cannot add GameObject: '", tile, "', This tile exists here: '", curr, "' at line: ", line);
-            exit(0);
-        }
-    }
+            char curr = g->getMap(rCount, cCount);
+            if (curr != '0')
+            {
+                fprintf(stderr, "%s %c %s %c %s %d \n", "Cannot add GameObject: '", tile, "', This tile exists here: '", curr, "'. Line: ", line);
+                exit(0);
+            }
 
-    for (int i = r; i < r+h; i++)
-    {
-        char curr = g->getMap(i, c);
-        if (curr != '0')
-        {
-            fprintf(stderr, "%s %c %s %c %s \n", "Cannot add GameObject: '", tile, "', This tile exists here: '", curr, "'");
-            exit(0);
+            g->setMap(rCount, cCount, tile);
         }
     }
 }

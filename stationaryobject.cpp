@@ -13,12 +13,6 @@ StationaryObject::StationaryObject(int r, int c, char tile, int w, int h, Game* 
 
     m_row = r;
     m_col = c;
-
-    for (int rCount = r; rCount < r + h; rCount++)
-    {
-        for (int cCount = c; cCount < c + w; cCount++)
-            g->setMap(rCount, cCount, tile);
-    }
 }
 
 StationaryObject::~StationaryObject()
