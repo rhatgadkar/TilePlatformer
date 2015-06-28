@@ -10,9 +10,6 @@ StationaryObject::StationaryObject(int r, int c, char tile, int w, int h, Game* 
         fprintf(stderr, "%s %c %s %d \n", "Invalid StationaryObject tile char: '", tile, "' at line: ", line);
         exit(0);
     }
-
-    m_row = r;
-    m_col = c;
 }
 
 StationaryObject::~StationaryObject()

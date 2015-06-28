@@ -11,6 +11,8 @@ GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g, int line)
     m_game = g;
     m_x =  c * TILE_WIDTH;
     m_y = r * TILE_HEIGHT;
+    m_row = r;
+    m_col = c;
 
     if (tile != 'w' && tile != 'p' && tile != 's' && tile != 'm')
     {

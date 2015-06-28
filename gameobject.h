@@ -19,6 +19,8 @@ public:
     int getHeight() const { return m_height; }
     int getX() const { return m_x; }
     int getY() const { return m_y; }
+    int getR() const { return m_row; }
+    int getC() const { return m_col; }
     bool inTileCol(int x) { return (x % TILE_WIDTH == 0); }
     bool inTileRow(int y) { return (y % TILE_HEIGHT == 0); }
     bool validRow(int r) { return (r >= 0 && r < NUM_ROWS); }
@@ -34,6 +36,8 @@ private:
 protected:
     int m_x;
     int m_y;
+    int m_row;
+    int m_col;
 };
 
 #endif // GAMEOBJECT_H
