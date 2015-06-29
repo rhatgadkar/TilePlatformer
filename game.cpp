@@ -26,6 +26,7 @@ Game::Game()
     m_levelWidth = MAX_LEVEL_WIDTH;
     m_numCols = MAX_NUM_COLS;
     m_camX = 0;
+    m_player = NULL;
 
     m_key = new bool[4];
     m_key[0] = false; m_key[1] = false; m_key[2] = false; m_key[3] = false;
@@ -49,7 +50,7 @@ Game::Game()
             m_map[r][c] = '0';
     }
 
-    m_levelWidth = parseMapFile() + TILE_WIDTH;
+    m_levelWidth = parseMapFile() + TILE_WIDTH; // the last wall or stenemy determines level width
     m_numCols = m_levelWidth / TILE_WIDTH;
 
     for (int r = 0; r < NUM_ROWS; r++)
@@ -412,7 +413,7 @@ int Game::parseMapFile() // returns value for m_levelWidth
                     num = -1;
                     if (height < 1 || height > NUM_ROWS)
                     {
-                        fprintf(stderr, "%s %d %s %d \n", "Map file error:\nInvalid height: '", col, "' at line: ", lineNum);
+                        fprintf(stderr, "%s %d %s %d \n", "Map file error:\nInvalid height: '", height, "' at line: ", lineNum);
                         exit(0);
                     }
                     break;
@@ -430,8 +431,16 @@ int Game::parseMapFile() // returns value for m_levelWidth
             addNewStationaryObject(new Wall(row, col, width, height, this, lineNum));
             break;
         case 'p':
+        {
+            if (m_player != NULL)
+            {
+                fprintf(stderr, "%s%d\n", "Map file error:\nCan only have one player. Extra player at line: ", lineNum);
+                exit(0);
+            }
+
             m_player = new Player(row, col, width, height, this, lineNum);
             break;
+        }
         case 's':
             addNewStationaryObject(new StationaryEnemy(row, col, width, height, this, lineNum));
             break;
@@ -449,6 +458,12 @@ int Game::parseMapFile() // returns value for m_levelWidth
 
         lineNum++;
         commaCount = 0;
+    }
+
+    if (m_player == NULL)
+    {
+        fprintf(stderr, "%s\n", "Map file error:\nA player must be added.");
+        exit(0);
     }
 
     // remove chars in map for player
