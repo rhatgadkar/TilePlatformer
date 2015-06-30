@@ -229,6 +229,9 @@ void Game::reset()
     }
     m_movingobjects.clear();
 
+    m_stationaryCount = 0;
+    m_movingCount = 0;
+
     for (int r = 0; r < NUM_ROWS; r++)
     {
         m_map[r] = new char[m_numCols];
@@ -474,9 +477,9 @@ int Game::parseMapFile() // returns value for m_levelWidth
     }
 
     // remove chars in map for player
-    for (int r = 0; r < (m_player->getR() + m_player->getHeight()); r++)
+    for (int r = m_player->getR(); r < (m_player->getR() + m_player->getHeight()); r++)
     {
-        for (int c = 0; c < (m_player->getC() + m_player->getWidth()); c++)
+        for (int c = m_player->getC(); c < (m_player->getC() + m_player->getWidth()); c++)
             setMap(r, c, '0');
     }
 
