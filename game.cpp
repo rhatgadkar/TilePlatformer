@@ -209,6 +209,8 @@ void Game::reset()
     delete m_player;
     m_player = NULL;
 
+    m_camX = 0;
+
     list<StationaryObject*>::iterator it = m_stationaryobjects.begin();
     while (it != m_stationaryobjects.end())
     {
@@ -268,8 +270,8 @@ void Game::draw()
         //camX = 0;
         ;
     else if (playerX >= m_levelWidth - SCREEN_WIDTH / 2)
-        //camX = m_levelWidth - SCREEN_WIDTH / 2;
-        ;
+        m_camX = m_levelWidth - SCREEN_WIDTH;
+        //;
     else
     {
         m_camX = playerX - SCREEN_WIDTH / 2;
@@ -309,6 +311,11 @@ void Game::draw()
 
 void Game::drawGameOverScreen() const
 {
+    ALLEGRO_TRANSFORM trans;
+    al_identity_transform(&trans);
+    al_translate_transform(&trans, 0, 0);
+    al_use_transform(&trans);
+
     al_clear_to_color(al_map_rgb(0, 0, 0));
 
     al_draw_text(m_font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 3.5, SCREEN_HEIGHT / 10, ALLEGRO_ALIGN_LEFT, "Game Over");
