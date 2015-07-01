@@ -53,12 +53,12 @@ Game::Game()
     m_levelWidth = parseMapFile() + TILE_WIDTH; // the last wall or stenemy determines level width
     m_numCols = m_levelWidth / TILE_WIDTH;
 
-    for (int r = 0; r < NUM_ROWS; r++)
-    {
-        for (int c = 0; c < m_numCols; c++)
-            cout << m_map[r][c];
-        cout << endl;
-    }
+//    for (int r = 0; r < NUM_ROWS; r++)
+//    {
+//        for (int c = 0; c < m_numCols; c++)
+//            cout << m_map[r][c];
+//        cout << endl;
+//    }
 }
 
 Game::~Game()

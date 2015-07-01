@@ -2,6 +2,8 @@
 #include "game.h"
 #include "globals.h"
 #include "gameobject.h"
+#include <iostream>
+using namespace std;
 
 void Player::doSomething()
 {
@@ -239,7 +241,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
 
         if (validRow(left_tile_r) && validCol(left_tile_c))
         {
-            if (inTileCol(x) && !inTileRow(y))
+            if (inTileCol(x) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(left_tile_r, left_tile_c) != 'w')
                 {
@@ -250,7 +252,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
                 else
                     insideLeft = true;
             }
-            else if (inTileCol(x) && inTileRow(y))
+            else if (inTileCol(x) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(left_tile_r, left_tile_c) == 'w')
                     insideLeft = true;
@@ -283,7 +285,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
 
         if (validRow(right_tile_r) && validCol(right_tile_c))
         {
-            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && !inTileRow(y))
+            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(right_tile_r, right_tile_c) != 'w')
                 {
@@ -294,7 +296,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
                 else
                     insideRight = true;
             }
-            else if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y))
+            else if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(right_tile_r, right_tile_c) == 'w')
                     insideRight = true;
