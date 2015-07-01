@@ -12,6 +12,9 @@ const int SCREEN_HEIGHT = 480;
 const int TILE_WIDTH = 32;
 const int TILE_HEIGHT = 24;
 
+const int PLAYER_WIDTH = 22;
+const int PLAYER_HEIGHT = 14;
+
 const int MAX_LEVEL_WIDTH = 3200;
 
 const int MAX_NUM_COLS = MAX_LEVEL_WIDTH / TILE_WIDTH;

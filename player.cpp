@@ -32,7 +32,7 @@ bool Player::insideStationaryEnemy(Game* game, int x, int y)
         int cBound = leftBound_x / TILE_WIDTH;
         if (game->getMap(rBound, cBound) == 's')
             return true;
-        int botYBound = y + (getHeight() * TILE_HEIGHT - 1) - 1; // checks bottom left
+        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom left
         if (validY(botYBound))
         {
             rBound =  botYBound / TILE_HEIGHT;
@@ -42,14 +42,14 @@ bool Player::insideStationaryEnemy(Game* game, int x, int y)
     }
 
     // check right bound
-    int rightBound_x = x + (getWidth() * TILE_WIDTH - 1) - 1;
+    int rightBound_x = x + (getWidth() * PLAYER_WIDTH - 1) - 1;
     if (validX(rightBound_x) && inTileCol(rightBound_x))
     {
         int rBound = y / TILE_HEIGHT; // checks top right
         int cBound = rightBound_x / TILE_WIDTH;
         if (game->getMap(rBound, cBound) == 's')
             return true;
-        int botYBound = y + (getHeight() * TILE_HEIGHT - 1) - 1; // checks bottom right
+        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom right
         if (validY(botYBound))
         {
             rBound =  botYBound / TILE_HEIGHT;
@@ -67,7 +67,7 @@ bool Player::insideStationaryEnemy(Game* game, int x, int y)
         int cBound = x / TILE_WIDTH; // checks top left
         if (game->getMap(rBound, cBound) == 's')
             return true;
-        int rightXBound = x + (getWidth() * TILE_WIDTH - 1) - 1; // checks top right
+        int rightXBound = x + (getWidth() * PLAYER_WIDTH - 1) - 1; // checks top right
         if (validX(rightXBound))
         {
             cBound =  rightXBound / TILE_WIDTH;
@@ -77,14 +77,14 @@ bool Player::insideStationaryEnemy(Game* game, int x, int y)
     }
 
     // check down bound
-    int downBound_y = y + (getHeight() * TILE_HEIGHT);
+    int downBound_y = y + (getHeight() * PLAYER_HEIGHT);
     if (validY(downBound_y) && inTileRow(downBound_y))
     {
         int rBound = downBound_y / TILE_HEIGHT;
         int cBound = x / TILE_WIDTH; // checks bottom left
         if (game->getMap(rBound, cBound) == 's')
             return true;
-        int rightXBound = x + (getWidth() * TILE_WIDTH - 1) - 1; // checks bottom right
+        int rightXBound = x + (getWidth() * PLAYER_WIDTH - 1) - 1; // checks bottom right
         if (validX(rightXBound))
         {
             cBound =  rightXBound / TILE_WIDTH;
@@ -174,7 +174,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
 
     for (int i = 0; i < width && !insideTop; i++)
     {
-        int top_tile_c = (x + (TILE_WIDTH * i)) / TILE_WIDTH;
+        int top_tile_c = (x + (PLAYER_WIDTH * i)) / TILE_WIDTH;
 
         if (validRow(top_tile_r) && validCol(top_tile_c))
         {
@@ -198,15 +198,15 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
     }
 
     // bot edge detect
-    int bot_tile_r = (y / TILE_HEIGHT) + height;
+    int bot_tile_r = (y + (height * PLAYER_HEIGHT)) / TILE_HEIGHT;
 
     for (int i = 0; i < width && !insideDown; i++)
     {
-        int bot_tile_c = (x + (TILE_WIDTH * i)) / TILE_WIDTH;
+        int bot_tile_c = (x + (PLAYER_WIDTH * i)) / TILE_WIDTH;
 
         if (validRow(bot_tile_r) && validCol(bot_tile_c))
         {
-            if (inTileRow(y) && !inTileCol(x))
+            if (inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)) && !inTileCol(x))
             {
                 if (game->getMap(bot_tile_r, bot_tile_c) != 'w')
                 {
@@ -217,7 +217,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
                 else
                     insideDown = true;
             }
-            if (inTileCol(x) && inTileRow(y))
+            if (inTileCol(x) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(bot_tile_r, bot_tile_c) == 'w')
                     insideDown = true;
@@ -235,7 +235,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
 
     for (int i = 0; i < height; i++)
     {
-        int left_tile_r = (y + (TILE_HEIGHT * i)) / TILE_HEIGHT;
+        int left_tile_r = (y + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
 
         if (validRow(left_tile_r) && validCol(left_tile_c))
         {
@@ -256,7 +256,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
                     insideLeft = true;
                 else
                 {
-                    int bot_left_tile_r = left_tile_r + height;
+                    int bot_left_tile_r = left_tile_r + (height * PLAYER_HEIGHT / TILE_HEIGHT);
                     int bot_left_tile_c = left_tile_c;
                     if (validRow(bot_left_tile_r) && game->getMap(bot_left_tile_r, bot_left_tile_c) == 'w')
                     {
@@ -275,15 +275,15 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
     }
 
     // right edge detect
-    int right_tile_c = (x / TILE_WIDTH) + width;
+    int right_tile_c = (x + (width * PLAYER_WIDTH)) / TILE_WIDTH;
 
     for (int i = 0; i < height; i++)
     {
-        int right_tile_r = (y + (TILE_HEIGHT * i)) / TILE_HEIGHT;
+        int right_tile_r = (y + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
 
         if (validRow(right_tile_r) && validCol(right_tile_c))
         {
-            if (inTileCol(x) && !inTileRow(y))
+            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && !inTileRow(y))
             {
                 if (game->getMap(right_tile_r, right_tile_c) != 'w')
                 {
@@ -294,13 +294,13 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
                 else
                     insideRight = true;
             }
-            else if (inTileCol(x) && inTileRow(y))
+            else if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y))
             {
                 if (game->getMap(right_tile_r, right_tile_c) == 'w')
                     insideRight = true;
                 else
                 {
-                    int bot_right_tile_r = right_tile_r + height;
+                    int bot_right_tile_r = right_tile_r + (height * PLAYER_HEIGHT / TILE_HEIGHT);
                     int bot_right_tile_c = right_tile_c;
                     if (validRow(bot_right_tile_r) && game->getMap(bot_right_tile_r, bot_right_tile_c) == 'w')
                     {

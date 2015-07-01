@@ -261,9 +261,9 @@ void Game::draw()
 
     // draw player
     float x1 = m_player->getX();
-    float x2 = x1 + (m_player->getWidth() * TILE_WIDTH);
+    float x2 = x1 + (m_player->getWidth() * PLAYER_WIDTH);
     float y1 = m_player->getY();
-    float y2 = y1 + (m_player->getHeight() * TILE_HEIGHT);
+    float y2 = y1 + (m_player->getHeight() * PLAYER_HEIGHT);
     al_draw_filled_rectangle(x1, y1, x2, y2, al_map_rgb(0, 255, 0));
 
     float playerX = x1;
