@@ -172,26 +172,29 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
     int height = getHeight();
 
     // top edge detect
-    int top_tile_r = (y / TILE_HEIGHT) - 1;
+    int top_tile_r = ((y - TILE_HEIGHT - PLAYER_HEIGHT) / TILE_HEIGHT) - 1;
 
     for (int i = 0; i < width && !insideTop; i++)
     {
-        int top_tile_c = (x + (PLAYER_WIDTH * i)) / TILE_WIDTH;
+        int top_tile_c = ((x - (TILE_WIDTH - PLAYER_WIDTH)) + (PLAYER_WIDTH * i)) / TILE_WIDTH;
 
         if (validRow(top_tile_r) && validCol(top_tile_c))
         {
-            if (inTileRow(y) && !inTileCol(x))
+            if (inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)) && !inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)))
             {
                 if (game->getMap(top_tile_r, top_tile_c) != 'w')
                 {
                     top_tile_c++;
                     if (validCol(top_tile_c) && game->getMap(top_tile_r, top_tile_c) == 'w')
+                    {
                         insideTop = true;
+                        cout << "ab\n";
+                    }
                 }
                 else
                     insideTop = true;
             }
-            if (inTileCol(x) && inTileRow(y))
+            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(top_tile_r, top_tile_c) == 'w')
                     insideTop = true;
@@ -204,22 +207,25 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
 
     for (int i = 0; i < width && !insideDown; i++)
     {
-        int bot_tile_c = (x + (PLAYER_WIDTH * i)) / TILE_WIDTH;
+        int bot_tile_c = ((x - TILE_WIDTH - PLAYER_WIDTH) + (PLAYER_WIDTH * i)) / TILE_WIDTH;
 
         if (validRow(bot_tile_r) && validCol(bot_tile_c))
         {
-            if (inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)) && !inTileCol(x))
+            if (inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)) && !inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)))
             {
                 if (game->getMap(bot_tile_r, bot_tile_c) != 'w')
                 {
                     bot_tile_c++;
                     if (validCol(bot_tile_c) && game->getMap(bot_tile_r, bot_tile_c) == 'w')
+                    {
                         insideDown = true;
+
+                    }
                 }
                 else
                     insideDown = true;
             }
-            if (inTileCol(x) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
+            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(bot_tile_r, bot_tile_c) == 'w')
                     insideDown = true;
@@ -237,25 +243,30 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
 
     for (int i = 0; i < height; i++)
     {
-        int left_tile_r = (y + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
+        int left_tile_r = ((y - (TILE_HEIGHT - PLAYER_HEIGHT)) + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
 
         if (validRow(left_tile_r) && validCol(left_tile_c))
         {
-            if (inTileCol(x) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
+            if (inTileCol(x) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT))) // jumping over left wall
             {
-                if (game->getMap(left_tile_r, left_tile_c) != 'w')
+                if (game->getMap(left_tile_r, left_tile_c) != 'w') // just right over edge
                 {
                     left_tile_r++;
+
                     if (validRow(left_tile_r) && game->getMap(left_tile_r, left_tile_c) == 'w')
                         insideLeft = true;
                 }
                 else
+                {
                     insideLeft = true;
+                }
             }
             else if (inTileCol(x) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
             {
                 if (game->getMap(left_tile_r, left_tile_c) == 'w')
+                {
                     insideLeft = true;
+                }
                 else
                 {
                     int bot_left_tile_r = left_tile_r + (height * PLAYER_HEIGHT / TILE_HEIGHT);
@@ -281,13 +292,13 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
 
     for (int i = 0; i < height; i++)
     {
-        int right_tile_r = (y + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
+        int right_tile_r = ((y - (TILE_HEIGHT - PLAYER_HEIGHT)) + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
 
         if (validRow(right_tile_r) && validCol(right_tile_c))
         {
-            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
+            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT))) // jumping over right wall
             {
-                if (game->getMap(right_tile_r, right_tile_c) != 'w')
+                if (game->getMap(right_tile_r, right_tile_c) != 'w') // just right over edge
                 {
                     right_tile_r++;
                     if (validRow(right_tile_r) && game->getMap(right_tile_r, right_tile_c) == 'w')
