@@ -2,8 +2,6 @@
 #include "game.h"
 #include "globals.h"
 #include "gameobject.h"
-#include <iostream>
-using namespace std;
 
 void Player::doSomething()
 {
@@ -168,185 +166,134 @@ void Player::movePlayer(Game* game, bool insideLeftTile, bool insideRightTile, b
 
 void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown)
 {
-    int width = getWidth();
-    int height = getHeight();
+    int playerC = x / TILE_WIDTH;
+    int playerR = y / TILE_HEIGHT;
+    int x_end = x + PLAYER_WIDTH;
+    int y_end = y + PLAYER_HEIGHT;
 
-    // top edge detect
-    int top_tile_r = ((y - TILE_HEIGHT - PLAYER_HEIGHT) / TILE_HEIGHT) - 1;
-
-    for (int i = 0; i < width && !insideTop; i++)
+    // top row
+    int topRow = playerR - 1;
+    if (validRow(topRow))
     {
-        int top_tile_c = ((x - (TILE_WIDTH - PLAYER_WIDTH)) + (PLAYER_WIDTH * i)) / TILE_WIDTH;
+        int topRow_y = topRow * TILE_HEIGHT;
+        int topRow_y_end = topRow_y + TILE_HEIGHT;
 
-        if (validRow(top_tile_r) && validCol(top_tile_c))
-        {
-            if (inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)) && !inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)))
-            {
-                if (game->getMap(top_tile_r, top_tile_c) != 'w')
-                {
-                    top_tile_c++;
-                    if (validCol(top_tile_c) && game->getMap(top_tile_r, top_tile_c) == 'w')
-                    {
-                        insideTop = true;
-                        cout << "ab\n";
-                    }
-                }
-                else
-                    insideTop = true;
-            }
-            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
-            {
-                if (game->getMap(top_tile_r, top_tile_c) == 'w')
-                    insideTop = true;
-            }
-        }
+        if (topRow_y_end == y)
+            insideTop = true;
     }
 
-    // bot edge detect
-    int bot_tile_r = (y + (height * PLAYER_HEIGHT)) / TILE_HEIGHT;
-
-    for (int i = 0; i < width && !insideDown; i++)
+    // bot row
+    int botRow = playerR + 1;
+    if (validRow(botRow))
     {
-        int bot_tile_c = ((x - TILE_WIDTH - PLAYER_WIDTH) + (PLAYER_WIDTH * i)) / TILE_WIDTH;
+        int botRow_y = botRow * TILE_HEIGHT;
 
-        if (validRow(bot_tile_r) && validCol(bot_tile_c))
-        {
-            if (inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)) && !inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)))
-            {
-                if (game->getMap(bot_tile_r, bot_tile_c) != 'w')
-                {
-                    bot_tile_c++;
-                    if (validCol(bot_tile_c) && game->getMap(bot_tile_r, bot_tile_c) == 'w')
-                    {
-                        insideDown = true;
-
-                    }
-                }
-                else
-                    insideDown = true;
-            }
-            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
-            {
-                if (game->getMap(bot_tile_r, bot_tile_c) == 'w')
-                    insideDown = true;
-            }
-        }
-
-        if (insideDown)
-            break;
+        if (botRow_y == y_end)
+            insideDown = true;
     }
 
-    bool checkBotLeft = false, checkBotRight = false, checkTopLeft = false, checkTopRight = false;
-
-    // left edge detect
-    int left_tile_c = (x / TILE_WIDTH) - 1;
-
-    for (int i = 0; i < height; i++)
+    // left col
+    int leftCol = playerC - 1;
+    if (validCol(leftCol))
     {
-        int left_tile_r = ((y - (TILE_HEIGHT - PLAYER_HEIGHT)) + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
+        int leftCol_x = leftCol * TILE_WIDTH;
+        int leftCol_x_end = leftCol_x + TILE_WIDTH;
 
-        if (validRow(left_tile_r) && validCol(left_tile_c))
-        {
-            if (inTileCol(x) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT))) // jumping over left wall
-            {
-                if (game->getMap(left_tile_r, left_tile_c) != 'w') // just right over edge
-                {
-                    left_tile_r++;
-
-                    if (validRow(left_tile_r) && game->getMap(left_tile_r, left_tile_c) == 'w')
-                        insideLeft = true;
-                }
-                else
-                {
-                    insideLeft = true;
-                }
-            }
-            else if (inTileCol(x) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
-            {
-                if (game->getMap(left_tile_r, left_tile_c) == 'w')
-                {
-                    insideLeft = true;
-                }
-                else
-                {
-                    int bot_left_tile_r = left_tile_r + (height * PLAYER_HEIGHT / TILE_HEIGHT);
-                    int bot_left_tile_c = left_tile_c;
-                    if (validRow(bot_left_tile_r) && game->getMap(bot_left_tile_r, bot_left_tile_c) == 'w')
-                    {
-                        checkBotLeft = true;
-                    }
-
-                    int top_left_tile_r = left_tile_r - 1;
-                    int top_left_tile_c = left_tile_c;
-                    if (validRow(top_left_tile_r) && game->getMap(top_left_tile_r, top_left_tile_c) == 'w')
-                    {
-                        checkTopLeft = true;
-                    }
-                }
-            }
-        }
+        if (leftCol_x_end == x)
+            insideLeft = true;
     }
 
-    // right edge detect
-    int right_tile_c = (x + (width * PLAYER_WIDTH)) / TILE_WIDTH;
-
-    for (int i = 0; i < height; i++)
+    // right col
+    int rightCol = playerC + 1;
+    if (validCol(rightCol))
     {
-        int right_tile_r = ((y - (TILE_HEIGHT - PLAYER_HEIGHT)) + (PLAYER_HEIGHT * i)) / TILE_HEIGHT;
+        int rightCol_x = rightCol * TILE_WIDTH;
 
-        if (validRow(right_tile_r) && validCol(right_tile_c))
-        {
-            if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && !inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT))) // jumping over right wall
-            {
-                if (game->getMap(right_tile_r, right_tile_c) != 'w') // just right over edge
-                {
-                    right_tile_r++;
-                    if (validRow(right_tile_r) && game->getMap(right_tile_r, right_tile_c) == 'w')
-                        insideRight = true;
-                }
-                else
-                    insideRight = true;
-            }
-            else if (inTileCol(x - (TILE_WIDTH - PLAYER_WIDTH)) && inTileRow(y - (TILE_HEIGHT - PLAYER_HEIGHT)))
-            {
-                if (game->getMap(right_tile_r, right_tile_c) == 'w')
-                    insideRight = true;
-                else
-                {
-                    int bot_right_tile_r = right_tile_r + (height * PLAYER_HEIGHT / TILE_HEIGHT);
-                    int bot_right_tile_c = right_tile_c;
-                    if (validRow(bot_right_tile_r) && game->getMap(bot_right_tile_r, bot_right_tile_c) == 'w')
-                    {
-                        checkBotRight = true;
-                    }
-
-                    int top_right_tile_r = right_tile_r - 1;
-                    int top_right_tile_c = right_tile_c;
-                    if (validRow(top_right_tile_r) && game->getMap(top_right_tile_r, top_right_tile_c) == 'w')
-                    {
-                        checkTopRight = true;
-                    }
-                }
-            }
-        }
+        if (rightCol_x == x_end)
+            insideRight = true;
     }
 
-    if (checkTopLeft && checkBotLeft)
+    // top left
+    int tlRow = playerR - 1;
+    int tlCol = playerC - 1;
+
+    if (!insideLeft && validCol(tlCol))
     {
-        insideTop = true;
-        insideDown = true;
+        int tlCol_x = tlCol * TILE_WIDTH;
+        int tlCol_x_end = tlCol_x + TILE_WIDTH;
+
+        if (tlCol_x_end == x)
+            insideLeft = true;
     }
-    if (checkTopRight && checkBotRight)
+
+    if (!insideTop && validRow(tlRow))
     {
-        insideTop = true;
-        insideDown = true;
+        int tlRow_y = tlRow * TILE_HEIGHT;
+        int tlRow_y_end = tlRow_y + TILE_HEIGHT;
+
+        if (tlRow_y_end == y)
+            insideTop = true;
     }
-    if (checkBotRight && !checkTopRight && !insideLeft)
-        insideDown = true;
-    if (checkBotLeft && !checkTopLeft && !insideRight)
-        insideDown = true;
-    if (checkTopLeft && !checkBotLeft && !insideRight)
-        insideTop = true;
-    if (checkTopRight && !checkBotRight && !insideLeft)
-        insideTop = true;
+
+    // top right
+    int trRow = playerR - 1;
+    int trCol = playerC + 1;
+
+    if (!insideRight && validCol(trCol))
+    {
+        int trCol_x = trCol * TILE_WIDTH;
+
+        if (trCol_x == x_end)
+            insideRight = true;
+    }
+
+    if (!insideTop && validRow(trRow))
+    {
+        int trRow_y = trRow * TILE_HEIGHT;
+        int trRow_y_end = trRow_y + TILE_HEIGHT;
+
+        if (trRow_y_end == y)
+            insideTop = true;
+    }
+
+    // bot left
+    int blRow = playerR + 1;
+    int blCol = playerC - 1;
+
+    if (!insideLeft && validCol(blCol))
+    {
+        int blCol_x = blCol * TILE_WIDTH;
+        int blCol_x_end = blCol_x + TILE_WIDTH;
+
+        if (blCol_x_end == x)
+            insideLeft = true;
+    }
+
+    if (!insideDown && validRow(blRow))
+    {
+        int blRow_y = blRow * TILE_HEIGHT;
+
+        if (blRow_y == y_end)
+            insideDown = true;
+    }
+
+    // bot right
+    int brRow = playerR + 1;
+    int brCol = playerC + 1;
+
+    if (!insideRight && validCol(brCol))
+    {
+        int brCol_x = brCol * TILE_WIDTH;
+
+        if (brCol_x == x_end)
+            insideRight = true;
+    }
+
+    if (!insideDown && validRow(brRow))
+    {
+        int brRow_y = brRow * TILE_HEIGHT;
+
+        if (brRow_y == y_end)
+            insideDown = true;
+    }
 }
