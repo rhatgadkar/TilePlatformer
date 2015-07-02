@@ -167,7 +167,7 @@ void Player::movePlayer(Game* game, bool insideLeftTile, bool insideRightTile, b
 void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown)
 {
     // check left bound
-    int leftBound_x = x + 1;
+    int leftBound_x = x - 1;
     int leftBound_tileX = leftBound_x - (TILE_WIDTH - 1);
     if (validX(leftBound_x) && inTileCol(leftBound_tileX))
     {
@@ -185,7 +185,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
     }
 
     // check right bound
-    int rightBound_x = x + (getWidth() * PLAYER_WIDTH - 1) - 1;
+    int rightBound_x = x + (getWidth() * PLAYER_WIDTH - 1) + 1;
     if (validX(rightBound_x) && inTileCol(rightBound_x))
     {
         int rBound = y / TILE_HEIGHT; // checks top right
