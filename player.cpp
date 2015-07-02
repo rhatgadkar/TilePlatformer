@@ -175,7 +175,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
         int cBound = leftBound_x / TILE_WIDTH;
         if (game->getMap(rBound, cBound) == 'w')
             insideLeft = true;
-        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom left
+        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom left -- causing falling edges
         if (validY(botYBound))
         {
             rBound =  botYBound / TILE_HEIGHT;
@@ -192,7 +192,7 @@ void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& inside
         int cBound = rightBound_x / TILE_WIDTH;
         if (game->getMap(rBound, cBound) == 'w')
             insideRight = true;
-        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom right
+        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom right -- causing falling edges
         if (validY(botYBound))
         {
             rBound =  botYBound / TILE_HEIGHT;
