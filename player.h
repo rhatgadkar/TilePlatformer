@@ -19,8 +19,7 @@ private:
     bool m_fallDown;
     bool m_canJump;
     void movePlayer(Game* game, bool insideLeftTile, bool insideRightTile, bool insideUpTile, bool insideDownTile);
-    void insideWall(Game* game, int x, int y, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown);
-    bool insideStationaryEnemy(Game* game, int x, int y);
+    void checkBounds(Game* game, int x, int y, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown, bool& insideStationaryEnemy);
 };
 
 #endif // PLAYER_H

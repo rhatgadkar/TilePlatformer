@@ -9,91 +9,16 @@ void Player::doSomething()
     int x = getX();
     int y = getY();
 
-    if (insideStationaryEnemy(game, x, y))
+    bool insideLeft = false, insideRight = false, insideTop = false, insideDown = false, insideEnemy = false;
+    checkBounds(game, x, y, insideLeft, insideRight, insideTop, insideDown, insideEnemy);
+
+    if (insideEnemy)
     {
         game->reset();
         return;
     }
 
-    bool insideLeft = false, insideRight = false, insideTop = false, insideDown = false;
-    insideWall(game, x, y, insideLeft, insideRight, insideTop, insideDown);
-
     movePlayer(game, insideLeft, insideRight, insideTop, insideDown);
-}
-
-bool Player::insideStationaryEnemy(Game* game, int x, int y)
-{
-    // check left bound
-    int leftBound_x = x + 1;
-    int leftBound_tileX = leftBound_x - (TILE_WIDTH - 1);
-    if (validX(leftBound_x) &&  inTileCol(leftBound_tileX))
-    {
-        int rBound = y / TILE_HEIGHT; // checks top left
-        int cBound = leftBound_x / TILE_WIDTH;
-        if (game->getMap(rBound, cBound) == 's')
-            return true;
-        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom left
-        if (validY(botYBound))
-        {
-            rBound =  botYBound / TILE_HEIGHT;
-            if (game->getMap(rBound, cBound) == 's')
-                return true;
-        }
-    }
-
-    // check right bound
-    int rightBound_x = x + (getWidth() * PLAYER_WIDTH - 1) - 1;
-    if (validX(rightBound_x) && inTileCol(rightBound_x))
-    {
-        int rBound = y / TILE_HEIGHT; // checks top right
-        int cBound = rightBound_x / TILE_WIDTH;
-        if (game->getMap(rBound, cBound) == 's')
-            return true;
-        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom right
-        if (validY(botYBound))
-        {
-            rBound =  botYBound / TILE_HEIGHT;
-            if (game->getMap(rBound, cBound) == 's')
-                return true;
-        }
-    }
-
-    // check up bound
-    int upBound_y = y + 1;
-    int upBound_tileY = upBound_y - (TILE_HEIGHT - 1);
-    if (validY(upBound_y) && inTileRow(upBound_tileY))
-    {
-        int rBound = upBound_y / TILE_HEIGHT;
-        int cBound = x / TILE_WIDTH; // checks top left
-        if (game->getMap(rBound, cBound) == 's')
-            return true;
-        int rightXBound = x + (getWidth() * PLAYER_WIDTH - 1) - 1; // checks top right
-        if (validX(rightXBound))
-        {
-            cBound =  rightXBound / TILE_WIDTH;
-            if (game->getMap(rBound, cBound) == 's')
-                return true;
-        }
-    }
-
-    // check down bound
-    int downBound_y = y + (getHeight() * PLAYER_HEIGHT);
-    if (validY(downBound_y) && inTileRow(downBound_y))
-    {
-        int rBound = downBound_y / TILE_HEIGHT;
-        int cBound = x / TILE_WIDTH; // checks bottom left
-        if (game->getMap(rBound, cBound) == 's')
-            return true;
-        int rightXBound = x + (getWidth() * PLAYER_WIDTH - 1) - 1; // checks bottom right
-        if (validX(rightXBound))
-        {
-            cBound =  rightXBound / TILE_WIDTH;
-            if (game->getMap(rBound, cBound) == 's')
-                return true;
-        }
-    }
-
-    return false;
 }
 
 void Player::movePlayer(Game* game, bool insideLeftTile, bool insideRightTile, bool insideUpTile, bool insideDownTile)
@@ -164,75 +89,7 @@ void Player::movePlayer(Game* game, bool insideLeftTile, bool insideRightTile, b
     }
 }
 
-void Player::insideWall(Game* game, int x, int y, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown)
+void Player::checkBounds(Game* game, int x, int y, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown, bool& insideEnemy)
 {
-    // check left bound
-    int leftBound_x = x - 1;
-    int leftBound_tileX = leftBound_x - (TILE_WIDTH - 1);
-    if (validX(leftBound_x) && inTileCol(leftBound_tileX))
-    {
-        int rBound = y / TILE_HEIGHT; // checks top left
-        int cBound = leftBound_x / TILE_WIDTH;
-        if (game->getMap(rBound, cBound) == 'w')
-            insideLeft = true;
-        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom left -- causing falling edges
-        if (validY(botYBound))
-        {
-            rBound =  botYBound / TILE_HEIGHT;
-            if (game->getMap(rBound, cBound) == 'w')
-                insideLeft = true;
-        }
-    }
-
-    // check right bound
-    int rightBound_x = x + (getWidth() * PLAYER_WIDTH - 1) + 1;
-    if (validX(rightBound_x) && inTileCol(rightBound_x))
-    {
-        int rBound = y / TILE_HEIGHT; // checks top right
-        int cBound = rightBound_x / TILE_WIDTH;
-        if (game->getMap(rBound, cBound) == 'w')
-            insideRight = true;
-        int botYBound = y + (getHeight() * PLAYER_HEIGHT - 1) - 1; // checks bottom right -- causing falling edges
-        if (validY(botYBound))
-        {
-            rBound =  botYBound / TILE_HEIGHT;
-            if (game->getMap(rBound, cBound) == 'w')
-                insideRight = true;
-        }
-    }
-
-    // check up bound
-    int upBound_y = y + 1;
-    int upBound_tileY = upBound_y - (TILE_HEIGHT - 1);
-    if (validY(upBound_y) && inTileRow(upBound_tileY))
-    {
-        int rBound = upBound_y / TILE_HEIGHT;
-        int cBound = x / TILE_WIDTH; // checks top left
-        if (game->getMap(rBound, cBound) == 'w')
-            insideTop = true;
-        int rightXBound = x + (getWidth() * PLAYER_WIDTH - 1) - 1; // checks top right
-        if (validX(rightXBound))
-        {
-            cBound =  rightXBound / TILE_WIDTH;
-            if (game->getMap(rBound, cBound) == 'w')
-                insideTop = true;
-        }
-    }
-
-    // check down bound
-    int downBound_y = y + (getHeight() * PLAYER_HEIGHT);
-    if (validY(downBound_y) && inTileRow(downBound_y))
-    {
-        int rBound = downBound_y / TILE_HEIGHT;
-        int cBound = x / TILE_WIDTH; // checks bottom left
-        if (game->getMap(rBound, cBound) == 'w')
-            insideDown = true;
-        int rightXBound = x + (getWidth() * PLAYER_WIDTH - 1) - 1; // checks bottom right
-        if (validX(rightXBound))
-        {
-            cBound =  rightXBound / TILE_WIDTH;
-            if (game->getMap(rBound, cBound) == 'w')
-                insideDown = true;
-        }
-    }
+    game->boundingBox(m_x, m_y, insideLeft, insideRight, insideTop, insideDown, insideEnemy);
 }

@@ -37,6 +37,7 @@ public:
     int getMovingCount() const { return m_movingCount; }
     int getLevelWidth() const { return m_levelWidth; }
     int getNumCols() const { return m_numCols; }
+    void boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown, bool& insideEnemy);
 private:
     char** m_map;
     std::list<StationaryObject*> m_stationaryobjects;

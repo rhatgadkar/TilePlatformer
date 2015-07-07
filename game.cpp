@@ -16,6 +16,7 @@
 #include <cctype>
 #include <iterator>
 #include <iostream>
+#include <math.h>
 using namespace std;
 
 Game::Game()
@@ -334,6 +335,58 @@ void Game::drawStartScreen() const
     al_draw_text(m_font, al_map_rgb(255, 255, 255), SCREEN_WIDTH / 2, SCREEN_HEIGHT / 2, ALLEGRO_ALIGN_CENTER, "Press Enter to start");
 
     al_flip_display();
+}
+
+void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown, bool& insideEnemy)
+{
+    int px_start = pX;
+    int px_end = pX + PLAYER_WIDTH;
+    int py_start = pY;
+    int py_end = pY + PLAYER_HEIGHT;
+
+    for (list<StationaryObject*>::iterator it = m_stationaryobjects.begin(); it != m_stationaryobjects.end(); it++)
+    {
+        StationaryObject* current = *it;
+        char id = current->getTile();
+        int gx_start = current->getX();
+        int g_width = current->getWidth();
+        int g_height = current->getHeight();
+        int gx_end = gx_start + TILE_WIDTH * g_width;
+        int gy_start = current->getY();
+        int gy_end = gy_start + TILE_HEIGHT * g_height;
+
+        if (id == 'p')
+            continue;
+
+        bool currRight = false, currLeft = false, currTop = false, currDown = false;
+
+        if (px_end >= gx_start && px_start < gx_end && py_start <= gy_end && py_end >= gy_start)
+        {
+            insideRight = true;
+            currRight = true;
+        }
+        else if (px_start <= gx_end && px_end > gx_start && py_start <= gy_end && py_end >= gy_start)
+        {
+            insideLeft = true;
+            currLeft = true;
+        }
+        else if (px_start <= gx_end && px_end >= gx_start && py_start >= gy_end && py_end > gy_start)
+        {
+            insideTop = true;
+            currTop = true;
+        }
+        else if (px_start <= gx_end && px_end >= gx_start && py_end <= gy_start && py_start < gy_end)
+        {
+            insideDown = true;
+            currDown = true;
+        }
+
+//        if (id == 's' && (currRight || currLeft || currTop || currDown))
+//        {
+//            insideEnemy = true;
+//            return;
+//        }
+    }
 }
 
 int Game::parseMapFile() // returns value for m_levelWidth
