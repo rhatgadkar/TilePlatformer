@@ -358,28 +358,46 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
         if (id == 'p')
             continue;
 
-        bool currRight = false, currLeft = false, currTop = false, currDown = false;
+        //bool currRight = false, currLeft = false, currTop = false, currDown = false;
 
-        if (px_end >= gx_start && px_start < gx_end && py_start <= gy_end && py_end >= gy_start)
+        if ( (px_end >= gx_start) && (px_start <= gx_end ) && (py_end >= gy_start) && (py_start <= gy_end) ) // collision occured
         {
-            insideRight = true;
-            currRight = true;
+            if (id == 's')
+            {
+                insideEnemy = true;
+                return;
+            }
+
+            if (px_end == gx_start)
+                insideRight = true;
+            else if (px_start == gx_end)
+                insideLeft = true;
+            else if (py_start == gy_end)
+                insideTop = true;
+            else if (py_end == gy_start)
+                insideDown = true;
         }
-        else if (px_start <= gx_end && px_end > gx_start && py_start <= gy_end && py_end >= gy_start)
-        {
-            insideLeft = true;
-            currLeft = true;
-        }
-        else if (px_start <= gx_end && px_end >= gx_start && py_start >= gy_end && py_end > gy_start)
-        {
-            insideTop = true;
-            currTop = true;
-        }
-        else if (px_start <= gx_end && px_end >= gx_start && py_end <= gy_start && py_start < gy_end)
-        {
-            insideDown = true;
-            currDown = true;
-        }
+
+//        if (px_end >= gx_start && px_start < gx_end && py_start <= gy_end && py_end >= gy_start)
+//        {
+//            insideRight = true;
+//            currRight = true;
+//        }
+//        else if (px_start <= gx_end && px_end > gx_start && py_start <= gy_end && py_end >= gy_start)
+//        {
+//            insideLeft = true;
+//            currLeft = true;
+//        }
+//        else if (px_start <= gx_end && px_end >= gx_start && py_start <= gy_end && py_end <= gy_start && py_end - PLAYER_HEIGHT >= gy_end)
+//        {
+//            insideTop = true;
+//            currTop = true;
+//        }
+//        else if (px_start <= gx_end && px_end >= gx_start && py_end >= gy_start && py_start < gy_end && py_start + PLAYER_HEIGHT >= gy_start)
+//        {
+//            insideDown = true;
+//            currDown = true;
+//        }
 
 //        if (id == 's' && (currRight || currLeft || currTop || currDown))
 //        {
