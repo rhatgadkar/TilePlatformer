@@ -19,7 +19,7 @@ GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g, int line)
         fprintf(stderr, "%s %c %s %d \n", "Invalid tile char: '", tile, "' at line: ", line);
         exit(0);
     }
-    if (!validRow(r))
+    if (!g->validRow(r))
     {
         fprintf(stderr, "%s %d %s %d \n", "Invalid row: '", r, "' at line: ", line);
         exit(0);
@@ -54,14 +54,4 @@ GameObject::GameObject(int r, int c, char tile, int w, int h, Game* g, int line)
             g->setMap(rCount, cCount, tile);
         }
     }
-}
-
-bool GameObject::validCol(int c)
-{
-    return (c >= 0 && c < m_game->getNumCols());
-}
-
-bool GameObject::validX(int x)
-{
-    return (x >= 0 && x < m_game->getLevelWidth());
 }

@@ -21,12 +21,6 @@ public:
     int getY() const { return m_y; }
     int getR() const { return m_row; }
     int getC() const { return m_col; }
-    bool inTileCol(int x) { return (x % TILE_WIDTH == 0); }
-    bool inTileRow(int y) { return (y % TILE_HEIGHT == 0); }
-    bool validRow(int r) { return (r >= 0 && r < NUM_ROWS); }
-    bool validCol(int c);
-    bool validX(int x);
-    bool validY(int y) { return (y >= 0 && y < SCREEN_HEIGHT); }
 private:
     Game* m_game;
     char m_tile;

@@ -344,67 +344,87 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
     int py_start = pY;
     int py_end = pY + PLAYER_HEIGHT;
 
-    for (list<StationaryObject*>::iterator it = m_stationaryobjects.begin(); it != m_stationaryobjects.end(); it++)
+    // collisoin for stationary objects. more efficient than using loops.
+    int pRow = py_start / TILE_HEIGHT;
+    int pCol = px_start / TILE_WIDTH;
+
+    int tr_row = pRow - 1, tr_col = pCol + 1;
+    int t_row = pRow - 1, t_col = pCol;
+    int tl_row = pRow - 1, tl_col = pCol - 1;
+    int l_row = pRow, l_col = pCol - 1;
+    int bl_row = pRow + 1, bl_col = pCol - 1;
+    int b_row = pRow + 1, b_col = pCol;
+    int br_row = pRow + 1, br_col = pCol + 1;
+    int r_row = pRow, r_col = pCol + 1;
+
+    int tileRows[] = { tr_row, t_row, tl_row, l_row, bl_row, b_row, br_row, r_row, pRow };
+    int tileCols[] = { tr_col, t_col, tl_col, l_col, bl_col, b_col, br_col, r_col, pCol };
+
+    for (int k = 0; k < 9; k++)
     {
-        StationaryObject* current = *it;
-        char id = current->getTile();
-        int gx_start = current->getX();
-        int g_width = current->getWidth();
-        int g_height = current->getHeight();
-        int gx_end = gx_start + TILE_WIDTH * g_width;
-        int gy_start = current->getY();
-        int gy_end = gy_start + TILE_HEIGHT * g_height;
-
-        if (id == 'p')
-            continue;
-
-        //bool currRight = false, currLeft = false, currTop = false, currDown = false;
-
-        if ( (px_end >= gx_start) && (px_start <= gx_end ) && (py_end >= gy_start) && (py_start <= gy_end) ) // collision occured
+        if (validRow(tileRows[k]) && validCol(tileCols[k]))
         {
-            if (id == 's')
+            char id = m_map[ tileRows[k] ][ tileCols[k] ];
+            if (id != 's' && id != 'w')
+                continue;
+
+            int gx_start = tileCols[k] * TILE_WIDTH;
+            int gx_end = gx_start + TILE_WIDTH;
+            int gy_start = tileRows[k] * TILE_HEIGHT;
+            int gy_end = gy_start + TILE_HEIGHT;
+
+            if ( (px_end >= gx_start) && (px_start <= gx_end ) && (py_end >= gy_start) && (py_start <= gy_end) ) // collision occured
             {
-                insideEnemy = true;
-                return;
+                if (id == 's')
+                {
+                    insideEnemy = true;
+                    return;
+                }
+
+                if (px_end == gx_start && ( py_end != gy_start ))
+                    insideRight = true;
+                else if (px_start == gx_end && ( py_end != gy_start ))
+                    insideLeft = true;
+                else if (py_start == gy_end)
+                    insideTop = true;
+                else if (py_end == gy_start)
+                    insideDown = true;
             }
-
-            if (px_end == gx_start)
-                insideRight = true;
-            else if (px_start == gx_end)
-                insideLeft = true;
-            else if (py_start == gy_end)
-                insideTop = true;
-            else if (py_end == gy_start)
-                insideDown = true;
         }
-
-//        if (px_end >= gx_start && px_start < gx_end && py_start <= gy_end && py_end >= gy_start)
-//        {
-//            insideRight = true;
-//            currRight = true;
-//        }
-//        else if (px_start <= gx_end && px_end > gx_start && py_start <= gy_end && py_end >= gy_start)
-//        {
-//            insideLeft = true;
-//            currLeft = true;
-//        }
-//        else if (px_start <= gx_end && px_end >= gx_start && py_start <= gy_end && py_end <= gy_start && py_end - PLAYER_HEIGHT >= gy_end)
-//        {
-//            insideTop = true;
-//            currTop = true;
-//        }
-//        else if (px_start <= gx_end && px_end >= gx_start && py_end >= gy_start && py_start < gy_end && py_start + PLAYER_HEIGHT >= gy_start)
-//        {
-//            insideDown = true;
-//            currDown = true;
-//        }
-
-//        if (id == 's' && (currRight || currLeft || currTop || currDown))
-//        {
-//            insideEnemy = true;
-//            return;
-//        }
     }
+
+//    for (list<StationaryObject*>::iterator it = m_stationaryobjects.begin(); it != m_stationaryobjects.end(); it++)
+//    {
+//        StationaryObject* current = *it;
+//        char id = current->getTile();
+//        int gx_start = current->getX();
+//        int g_width = current->getWidth();
+//        int g_height = current->getHeight();
+//        int gx_end = gx_start + TILE_WIDTH * g_width;
+//        int gy_start = current->getY();
+//        int gy_end = gy_start + TILE_HEIGHT * g_height;
+//
+//        if (id == 'p')
+//            continue;
+//
+//        if ( (px_end >= gx_start) && (px_start <= gx_end ) && (py_end >= gy_start) && (py_start <= gy_end) ) // collision occured
+//        {
+//            if (id == 's')
+//            {
+//                insideEnemy = true;
+//                return;
+//            }
+//
+//            if (px_end == gx_start)
+//                insideRight = true;
+//            else if (px_start == gx_end)
+//                insideLeft = true;
+//            else if (py_start == gy_end)
+//                insideTop = true;
+//            else if (py_end == gy_start)
+//                insideDown = true;
+//        }
+//    }
 }
 
 int Game::parseMapFile() // returns value for m_levelWidth

@@ -6,6 +6,7 @@
 #include "gameobject.h"
 #include "movingobject.h"
 #include "stationaryobject.h"
+#include "globals.h"
 
 class Player;
 
@@ -38,6 +39,12 @@ public:
     int getLevelWidth() const { return m_levelWidth; }
     int getNumCols() const { return m_numCols; }
     void boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool& insideTop, bool& insideDown, bool& insideEnemy);
+    bool inTileCol(int x) { return (x % TILE_WIDTH == 0); }
+    bool inTileRow(int y) { return (y % TILE_HEIGHT == 0); }
+    bool validRow(int r) { return (r >= 0 && r < NUM_ROWS); }
+    bool validCol(int c) { return (c >= 0 && c < m_numCols); }
+    bool validX(int x) { return (x >= 0 && x < m_levelWidth); }
+    bool validY(int y) { return (y >= 0 && y < SCREEN_HEIGHT); }
 private:
     char** m_map;
     std::list<StationaryObject*> m_stationaryobjects;
