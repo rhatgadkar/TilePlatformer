@@ -16,7 +16,6 @@
 #include <cctype>
 #include <iterator>
 #include <iostream>
-#include <math.h>
 using namespace std;
 
 Game::Game()
@@ -43,12 +42,12 @@ Game::Game()
     al_destroy_path(path);
 
     // initialize map
-    m_map = new char*[NUM_ROWS];
+    m_map = new (GameObject*)*[NUM_ROWS];
     for (int r = 0; r < NUM_ROWS; r++)
     {
-        m_map[r] = new char[m_numCols];
+        m_map[r] = new (GameObject*)[m_numCols];
         for (int c = 0; c < m_numCols; c++)
-            m_map[r][c] = '0';
+            m_map[r][c] = NULL;
     }
 
     m_levelWidth = parseMapFile() + TILE_WIDTH; // the last wall or stenemy determines level width
@@ -235,9 +234,9 @@ void Game::reset()
 
     for (int r = 0; r < NUM_ROWS; r++)
     {
-        m_map[r] = new char[m_numCols];
+        m_map[r] = new (GameObject*)[m_numCols];
         for (int c = 0; c < m_numCols; c++)
-            m_map[r][c] = '0';
+            m_map[r][c] = NULL;
     }
 
     parseMapFile();
@@ -344,7 +343,7 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
     int py_start = pY;
     int py_end = pY + PLAYER_HEIGHT;
 
-    // collisoin for stationary objects. more efficient than using loops.
+    // collision for stationary objects. more efficient than using loops. There is a wall jumping issue with this.
     int pRow = py_start / TILE_HEIGHT;
     int pCol = px_start / TILE_WIDTH;
 
@@ -360,17 +359,29 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
     int tileRows[] = { tr_row, t_row, tl_row, l_row, bl_row, b_row, br_row, r_row, pRow };
     int tileCols[] = { tr_col, t_col, tl_col, l_col, bl_col, b_col, br_col, r_col, pCol };
 
+    int lastSelectedRow = -1;
+    int lastSelectedCol = -1;
+
     for (int k = 0; k < 9; k++)
     {
         if (validRow(tileRows[k]) && validCol(tileCols[k]))
         {
-            char id = m_map[ tileRows[k] ][ tileCols[k] ];
+            GameObject* go = m_map[ tileRows[k] ][ tileCols[k] ];
+            char id = go->getTile();
             if (id != 's' && id != 'w')
                 continue;
 
-            int gx_start = tileCols[k] * TILE_WIDTH;
+            int go_row = go->getR();
+            int go_col = go->getC();
+
+            if (go_row == lastSelectedRow || go_col == lastSelectedCol)
+                continue;
+            lastSelectedRow = go_row;
+            lastSelectedCol = go_col;
+
+            int gx_start = go_col * TILE_WIDTH;
             int gx_end = gx_start + TILE_WIDTH;
-            int gy_start = tileRows[k] * TILE_HEIGHT;
+            int gy_start = go_row * TILE_HEIGHT;
             int gy_end = gy_start + TILE_HEIGHT;
 
             if ( (px_end >= gx_start) && (px_start <= gx_end ) && (py_end >= gy_start) && (py_start <= gy_end) ) // collision occured
@@ -381,9 +392,9 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
                     return;
                 }
 
-                if (px_end == gx_start && ( py_end != gy_start ))
+                if (px_end == gx_start)
                     insideRight = true;
-                else if (px_start == gx_end && ( py_end != gy_start ))
+                else if (px_start == gx_end)
                     insideLeft = true;
                 else if (py_start == gy_end)
                     insideTop = true;

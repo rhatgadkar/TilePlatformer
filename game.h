@@ -23,8 +23,8 @@ public:
     bool removeMovingObject(MovingObject* toDelete);
     void draw();
     void getInput();
-    char getMap(int r, int c) const { return m_map[r][c]; }
-    void setMap(int r, int c, char val) { m_map[r][c] = val; }
+    char getMap(int r, int c) const { return m_map[r][c]->getTile(); }
+    void setMap(int r, int c, GameObject* go) { m_map[r][c] = go; }
     Player* getPlayer() const { return m_player; }
     void drawGameOverScreen() const;
     void drawStartScreen() const;
@@ -46,7 +46,7 @@ public:
     bool validX(int x) { return (x >= 0 && x < m_levelWidth); }
     bool validY(int y) { return (y >= 0 && y < SCREEN_HEIGHT); }
 private:
-    char** m_map;
+    GameObject*** m_map;
     std::list<StationaryObject*> m_stationaryobjects;
     int m_stationaryCount;
     std::list<MovingObject*> m_movingobjects;
