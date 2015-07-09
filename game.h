@@ -23,7 +23,7 @@ public:
     bool removeMovingObject(MovingObject* toDelete);
     void draw();
     void getInput();
-    char getMap(int r, int c) const { return m_map[r][c]->getTile(); }
+    GameObject* getMap(int r, int c) const { return m_map[r][c]; }
     void setMap(int r, int c, GameObject* go) { m_map[r][c] = go; }
     Player* getPlayer() const { return m_player; }
     void drawGameOverScreen() const;

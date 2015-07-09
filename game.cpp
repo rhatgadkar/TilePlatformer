@@ -42,10 +42,10 @@ Game::Game()
     al_destroy_path(path);
 
     // initialize map
-    m_map = new (GameObject*)*[NUM_ROWS];
+    m_map = new GameObject**[NUM_ROWS];
     for (int r = 0; r < NUM_ROWS; r++)
     {
-        m_map[r] = new (GameObject*)[m_numCols];
+        m_map[r] = new GameObject*[m_numCols];
         for (int c = 0; c < m_numCols; c++)
             m_map[r][c] = NULL;
     }
@@ -53,12 +53,15 @@ Game::Game()
     m_levelWidth = parseMapFile() + TILE_WIDTH; // the last wall or stenemy determines level width
     m_numCols = m_levelWidth / TILE_WIDTH;
 
-//    for (int r = 0; r < NUM_ROWS; r++)
-//    {
-//        for (int c = 0; c < m_numCols; c++)
-//            cout << m_map[r][c];
-//        cout << endl;
-//    }
+    for (int r = 0; r < NUM_ROWS; r++)
+    {
+        for (int c = 0; c < m_numCols; c++)
+        if (m_map[r][c] != NULL)
+            cout << m_map[r][c]->getTile();
+        else
+            cout << 0;
+        cout << endl;
+    }
 }
 
 Game::~Game()
@@ -234,7 +237,7 @@ void Game::reset()
 
     for (int r = 0; r < NUM_ROWS; r++)
     {
-        m_map[r] = new (GameObject*)[m_numCols];
+        m_map[r] = new GameObject*[m_numCols];
         for (int c = 0; c < m_numCols; c++)
             m_map[r][c] = NULL;
     }
@@ -359,30 +362,32 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
     int tileRows[] = { tr_row, t_row, tl_row, l_row, bl_row, b_row, br_row, r_row, pRow };
     int tileCols[] = { tr_col, t_col, tl_col, l_col, bl_col, b_col, br_col, r_col, pCol };
 
-    int lastSelectedRow = -1;
-    int lastSelectedCol = -1;
+    int lastSelectedX = -1;
+    int lastSelectedY = -1;
 
     for (int k = 0; k < 9; k++)
     {
         if (validRow(tileRows[k]) && validCol(tileCols[k]))
         {
             GameObject* go = m_map[ tileRows[k] ][ tileCols[k] ];
+            if (go == NULL)
+                continue;
+
             char id = go->getTile();
             if (id != 's' && id != 'w')
                 continue;
 
-            int go_row = go->getR();
-            int go_col = go->getC();
+            int gx_start = go->getX();
+            int g_width = go->getWidth();
+            int g_height = go->getHeight();
+            int gx_end = gx_start + TILE_WIDTH * g_width;
+            int gy_start = go->getY();
+            int gy_end = gy_start + TILE_HEIGHT * g_height;
 
-            if (go_row == lastSelectedRow || go_col == lastSelectedCol)
+            if (gx_start == lastSelectedX && gy_start == lastSelectedY)
                 continue;
-            lastSelectedRow = go_row;
-            lastSelectedCol = go_col;
-
-            int gx_start = go_col * TILE_WIDTH;
-            int gx_end = gx_start + TILE_WIDTH;
-            int gy_start = go_row * TILE_HEIGHT;
-            int gy_end = gy_start + TILE_HEIGHT;
+            lastSelectedX = gx_start;
+            lastSelectedY = gy_start;
 
             if ( (px_end >= gx_start) && (px_start <= gx_end ) && (py_end >= gy_start) && (py_start <= gy_end) ) // collision occured
             {
@@ -579,10 +584,12 @@ int Game::parseMapFile() // returns value for m_levelWidth
     }
 
     // remove chars in map for player
-    for (int r = m_player->getR(); r < (m_player->getR() + m_player->getHeight()); r++)
+    int player_row = m_player->getR();
+    int player_col = m_player->getC();
+    for (int r = player_row; r < (player_row + m_player->getHeight()); r++)
     {
-        for (int c = m_player->getC(); c < (m_player->getC() + m_player->getWidth()); c++)
-            setMap(r, c, '0');
+        for (int c = player_col; c < (player_col + m_player->getWidth()); c++)
+            setMap(r, c, NULL);
     }
 
     // remove chars in map for movingobjects

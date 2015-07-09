@@ -21,6 +21,6 @@ StationaryObject::~StationaryObject()
     for (int rCount = m_row; rCount < m_row + h; rCount++)
     {
         for (int cCount = m_col; cCount < m_col + w; cCount++)
-            game->setMap(rCount, cCount, '0');
+            game->setMap(rCount, cCount, NULL);
     }
 }
