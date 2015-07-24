@@ -397,9 +397,9 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
                     return;
                 }
 
-                if (py_start == gy_end && validRow(pRow - 1) && m_map[pRow - 1][pCol] != NULL && m_map[pRow - 1][pCol]->getTile() == 'w')
+                if (py_start == gy_end)
                     insideTop = true;
-                else if (py_end == gy_start && validRow(pRow + 1) && m_map[pRow + 1][pCol] != NULL && m_map[pRow + 1][pCol]->getTile() == 'w')
+                else if (py_end == gy_start)
                     insideDown = true;
                 else if (px_end == gx_start)
                     insideRight = true;
