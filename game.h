@@ -13,7 +13,7 @@ class Player;
 class Game
 {
 public:
-    Game();
+    Game(char* mapFile);
     ~Game();
     void addNewStationaryObject(StationaryObject* stationaryobject)
       { m_stationaryobjects.push_back(stationaryobject); stationaryobject->setPos(m_stationaryCount); m_stationaryCount++; }
@@ -46,6 +46,7 @@ public:
     bool validX(int x) { return (x >= 0 && x < m_levelWidth); }
     bool validY(int y) { return (y >= 0 && y < SCREEN_HEIGHT); }
 private:
+    char* m_mapFile;
     GameObject*** m_map;
     std::list<StationaryObject*> m_stationaryobjects;
     int m_stationaryCount;

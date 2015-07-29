@@ -6,8 +6,20 @@
 #include "game.h"
 #include "globals.h"
 
-int main()
+int main(int argc, char** argv)
 {
+    if (argc == 0)
+    {
+        fprintf(stderr, "No map file entered as argument!\n");
+        return -1;
+    }
+
+    if (argc > 2)
+    {
+        fprintf(stderr, "Only one map file is allowed!\n");
+        return -1;
+    }
+
     ALLEGRO_DISPLAY* display = NULL;
     ALLEGRO_EVENT_QUEUE* event_queue = NULL;
     ALLEGRO_TIMER* timer = NULL;
@@ -73,7 +85,7 @@ int main()
 
     al_start_timer(timer);
 
-    Game game;
+    Game game(argv[1]);
 
     while (!doexit)
     {

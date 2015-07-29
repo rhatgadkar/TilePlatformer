@@ -18,8 +18,15 @@
 #include <iostream>
 using namespace std;
 
-Game::Game()
+Game::Game(char* mapFile)
 {
+    if (mapFile == NULL)
+    {
+        fprintf(stderr, "Map file cannot be NULL!\n");
+        exit(0);
+    }
+
+    m_mapFile = mapFile;
     m_reset = false;
     m_stationaryCount = 0;
     m_movingCount = 0;
@@ -446,7 +453,7 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
 int Game::parseMapFile() // returns value for m_levelWidth
 {
     ifstream mapFile;
-    mapFile.open("map.txt");
+    mapFile.open(m_mapFile);
     if (!mapFile.is_open())
     {
         fprintf(stderr, "Could not open map file.\n");
