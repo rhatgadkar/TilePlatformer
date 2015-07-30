@@ -404,7 +404,7 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
                     return;
                 }
 
-                if (py_start == gy_end && px_start != gx_end && px_end != gx_start)
+                if (py_start == gy_end/* && px_start != gx_end && px_end != gx_start*/)
                 {
                     int topRow = tileRows[k] - 1;
                     int botRow = tileRows[k] + 1;
@@ -422,7 +422,7 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
                     else
                         insideTop = true;
                 }
-                else if (py_end == gy_start && px_start != gx_end && px_end != gx_start)
+                else if (py_end == gy_start/* && px_start != gx_end && px_end != gx_start*/)
                 {
                     int topRow = tileRows[k] - 1;
                     int botRow = tileRows[k] + 1;
