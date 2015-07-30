@@ -404,46 +404,87 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
                     return;
                 }
 
-                if (py_start == gy_end/* && px_start != gx_end && px_end != gx_start*/)
+//                if (py_start == gy_end)
+//                {
+//                    int topRow = tileRows[k] - 1;
+//                    int botRow = tileRows[k] + 1;
+//
+//                    if (validRow(topRow) && validRow(botRow))
+//                    {
+//                        GameObject* go_topRow = m_map[topRow][tileCols[k]];
+//                        GameObject* go_botRow = m_map[botRow][tileCols[k]];
+//
+//                        if (go_topRow != NULL && go_botRow != NULL && go_topRow->getTile() == 'w' && go_botRow->getTile() == 'w')
+//                            ;
+//                        else
+//                            insideTop = true;
+//                    }
+//                    else
+//                        insideTop = true;
+//                }
+//                else if (py_end == gy_start)
+//                {
+//                    int topRow = tileRows[k] - 1;
+//                    int botRow = tileRows[k] + 1;
+//
+//                    if (validRow(topRow) && validRow(botRow))
+//                    {
+//                        GameObject* go_topRow = m_map[topRow][tileCols[k]];
+//                        GameObject* go_botRow = m_map[botRow][tileCols[k]];
+//
+//                        if (go_topRow != NULL && go_botRow != NULL && go_topRow->getTile() == 'w' && go_botRow->getTile() == 'w')
+//                            ;
+//                        else
+//                            insideDown = true;
+//                    }
+//                    else
+//                        insideDown = true;
+//                }
+//                else if (px_end == gx_start && py_start != gy_end && py_end != gy_start)
+//                    insideRight = true;
+//                else if (px_start == gx_end && py_start != gy_end && py_end != gy_start)
+//                    insideLeft = true;
+
+                if (px_end == gx_start)
                 {
-                    int topRow = tileRows[k] - 1;
-                    int botRow = tileRows[k] + 1;
+                    int leftCol = tileCols[k] - 1;
+                    int rightCol = tileCols[k] + 1;
 
-                    if (validRow(topRow) && validRow(botRow))
+                    if (validCol(leftCol) && validCol(rightCol))
                     {
-                        GameObject* go_topRow = m_map[topRow][tileCols[k]];
-                        GameObject* go_botRow = m_map[botRow][tileCols[k]];
+                        GameObject* go_leftCol = m_map[tileRows[k]][leftCol];
+                        GameObject* go_rightCol = m_map[tileRows[k]][rightCol];
 
-                        if (go_topRow != NULL && go_botRow != NULL && go_topRow->getTile() == 'w' && go_botRow->getTile() == 'w')
+                        if (go_leftCol != NULL && go_rightCol != NULL && go_leftCol->getTile() == 'w' && go_rightCol->getTile() == 'w')
                             ;
                         else
-                            insideTop = true;
+                            insideRight = true;
                     }
                     else
-                        insideTop = true;
+                        insideRight = true;
                 }
-                else if (py_end == gy_start/* && px_start != gx_end && px_end != gx_start*/)
+                else if (px_start == gx_end)
                 {
-                    int topRow = tileRows[k] - 1;
-                    int botRow = tileRows[k] + 1;
+                    int leftCol = tileCols[k] - 1;
+                    int rightCol = tileCols[k] + 1;
 
-                    if (validRow(topRow) && validRow(botRow))
+                    if (validCol(leftCol) && validCol(rightCol))
                     {
-                        GameObject* go_topRow = m_map[topRow][tileCols[k]];
-                        GameObject* go_botRow = m_map[botRow][tileCols[k]];
+                        GameObject* go_leftCol = m_map[tileRows[k]][leftCol];
+                        GameObject* go_rightCol = m_map[tileRows[k]][rightCol];
 
-                        if (go_topRow != NULL && go_botRow != NULL && go_topRow->getTile() == 'w' && go_botRow->getTile() == 'w')
+                        if (go_leftCol != NULL && go_rightCol != NULL && go_leftCol->getTile() == 'w' && go_rightCol->getTile() == 'w')
                             ;
                         else
-                            insideDown = true;
+                            insideLeft = true;
                     }
                     else
-                        insideDown = true;
+                        insideLeft = true;
                 }
-                else if (px_end == gx_start && py_start != gy_end && py_end != gy_start)
-                    insideRight = true;
-                else if (px_start == gx_end && py_start != gy_end && py_end != gy_start)
-                    insideLeft = true;
+                else if (py_start == gy_end && px_end != gx_start && px_start != gx_end)
+                    insideTop = true;
+                else if (py_end == gy_start && px_start != gx_end && px_end != gx_start)
+                    insideDown = true;
             }
         }
     }
