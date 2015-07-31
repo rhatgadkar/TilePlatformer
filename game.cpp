@@ -445,39 +445,26 @@ void Game::boundingBox(int pX, int pY, bool& insideLeft, bool& insideRight, bool
 //                else if (px_start == gx_end && py_start != gy_end && py_end != gy_start)
 //                    insideLeft = true;
 
+                int leftCol = tileCols[k] - 1;
+                int rightCol = tileCols[k] + 1;
+                GameObject* go_leftCol = m_map[ tileRows[k] ][leftCol];
+                GameObject* go_rightCol = m_map[ tileRows[k] ][rightCol];
+
                 if (px_end == gx_start)
                 {
-                    int leftCol = tileCols[k] - 1;
-                    int rightCol = tileCols[k] + 1;
-
-                    if (validCol(leftCol) && validCol(rightCol))
-                    {
-                        GameObject* go_leftCol = m_map[tileRows[k]][leftCol];
-                        GameObject* go_rightCol = m_map[tileRows[k]][rightCol];
-
-                        if (go_leftCol != NULL && go_rightCol != NULL && go_leftCol->getTile() == 'w' && go_rightCol->getTile() == 'w')
-                            ;
-                        else
-                            insideRight = true;
-                    }
+                    if (validCol(leftCol) && go_leftCol != NULL && go_leftCol->getTile() == 'w')
+                        ;
+                    //else if (validCol(rightCol) && go_rightCol != NULL && go_rightCol->getTile() == 'w')
+                    //    ;
                     else
                         insideRight = true;
                 }
                 else if (px_start == gx_end)
                 {
-                    int leftCol = tileCols[k] - 1;
-                    int rightCol = tileCols[k] + 1;
-
-                    if (validCol(leftCol) && validCol(rightCol))
-                    {
-                        GameObject* go_leftCol = m_map[tileRows[k]][leftCol];
-                        GameObject* go_rightCol = m_map[tileRows[k]][rightCol];
-
-                        if (go_leftCol != NULL && go_rightCol != NULL && go_leftCol->getTile() == 'w' && go_rightCol->getTile() == 'w')
-                            ;
-                        else
-                            insideLeft = true;
-                    }
+                    //if (validCol(leftCol) && go_leftCol != NULL && go_leftCol->getTile() == 'w')
+                    //    ;
+                    if (validCol(rightCol) && go_rightCol != NULL && go_rightCol->getTile() == 'w')
+                        ;
                     else
                         insideLeft = true;
                 }
